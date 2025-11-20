@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Scr1w">
+  <div class="relative w-full h-[70vh] flex flex-col items-center justify-center text-white">
+    
+    <!-- Floating Icons & Emojis -->
+    <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
+      <!-- Emojis - Smaller size, spread to extreme edges, staggered to avoid vertical alignment -->
+      
+      <!-- Top Left Area -->
+      <div class="absolute top-[20%] left-1 text-4xl animate-float-slow opacity-90">🔗</div>
+      <div class="absolute top-[30%] left-20 text-5xl animate-float-reverse-medium opacity-80">💻</div>
+
+      <!-- Top Right Area -->
+      <div class="absolute top-[25%] right-1 text-4xl animate-float-medium opacity-90">🤖</div>
+
+      <!-- Bottom Left Area -->
+      <div class="absolute bottom-[15%] left-15 text-4xl animate-float-fast opacity-90">👾</div>
+      <div class="absolute bottom-[40%] left-5 text-5xl animate-float-reverse-fast opacity-80">🌈</div>
+
+      <!-- Bottom Right Area -->
+      <div class="absolute bottom-[40%] right-2 text-5xl animate-float-slow opacity-80">🏆</div>
+      <div class="absolute bottom-[18%] right-20 text-5xl animate-float-reverse-medium opacity-80">🏅</div>
+    </div>
+
+    <div class="z-10 flex flex-col items-center animate-fade-in-up relative">
+      <div class="relative group mb-4">
+        <!-- Larger, darker glow - Fixed positioning to avoid clipping -->
+        <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-cyan-900 to-blue-900 rounded-full blur-[100px] opacity-30 pointer-events-none z-[-1]"></div>
+        
+        <img 
+          src="/favicon.png" 
+          alt="Scr1w Logo" 
+          class="relative w-48 h-48 md:w-64 md:h-64 object-contain"
+        />
+      </div>
+      
+      <!-- Grouped Title and Subtitle with tighter spacing -->
+      <div class="flex flex-col items-center gap-0 -mt-4">
+        <!-- Reverted Font, kept padding -->
+        <h1 class="text-5xl md:text-8xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-800 px-4 py-2" style="font-family: 'Knewave', sans-serif; letter-spacing: 0.05em;">
+          Scr1w
+        </h1>
+        
+        <p class="text-gray-400 font-mono text-sm md:text-base tracking-widest -mt-10">
+            {'Scr1w{S1nc3_2018,_F0und3d@DLUT:stud3nt_0rg_f0r_CTF&_r3s34rch}'}
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes floatReverse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(20px); }
+  }
+
+  .animate-float-slow { animation: float 6s ease-in-out infinite; }
+  .animate-float-medium { animation: float 4s ease-in-out infinite; }
+  .animate-float-fast { animation: float 3s ease-in-out infinite; }
+
+  .animate-float-reverse-slow { animation: floatReverse 7s ease-in-out infinite; }
+  .animate-float-reverse-medium { animation: floatReverse 5s ease-in-out infinite; }
+  .animate-float-reverse-fast { animation: floatReverse 4s ease-in-out infinite; }
+</style>
