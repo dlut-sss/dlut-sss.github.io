@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@unocss/reset": "^66.5.2",
+    "husky": "^9.1.7",
     "unocss": "^66.5.2"
   },
   "packageManager": "pnpm@10.14.0"
