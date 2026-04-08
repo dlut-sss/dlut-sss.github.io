@@ -15,7 +15,7 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     {
       posts.map((post) => (
         <li>
-          <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+          <a href={`/blog/${post.id}`}>{post.data.title}</a>
           <i>{post.data.date.toDateString()}</i>
         </li>
       ))
