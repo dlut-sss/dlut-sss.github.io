@@ -1,57 +1,394 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  pageClass?: string;
+}
+
+const {
+  title,
+  description = "Scr1w Studio 是大连理工大学学生网络安全团队，专注于 CTF、攻防研究与安全技术分享。",
+  pageClass = "",
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+const pageTitle = title
+  ? `${title} · Scr1w Studio`
+  : "Scr1w Studio · DLUT Cybersecurity Lab";
+
+const navItems = [
+  { href: "/", label: "首页", match: (path: string) => path === "/" },
+  { href: "/#research", label: "研究方向", match: () => false },
+  { href: "/blog", label: "技术文章", match: (path: string) => path.startsWith("/blog") },
+  { href: "/awards", label: "荣誉", match: (path: string) => path.startsWith("/awards") },
+  { href: "/about", label: "关于", match: (path: string) => path.startsWith("/about") },
+];
+---
+
 <!doctype html>
-<html lang="zh">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <title>Scr1w Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#070b14" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>{pageTitle}</title>
   </head>
-  <body class="bg-gray-9 text-white font-mono">
-    <header
-      class="max-w-screen-lg m-auto p-4 flex flex-wrap justify-between items-center"
-    >
-      <a class="inline-flex items-center gap-4" href="/">
-        <img src="/favicon.png" alt="logo" class="h-14" />
-        <h1 class="font-bold text-xl">Scr1w Studio</h1>
-      </a>
-      <div class="inline-flex gap-2">
-        <a href="/blog">Blog</a>
-        <a href="/awards">Awards</a>
-        <a href="javascript:void(0)">Tools</a>
-        <a href="https://dlut-sss.feishu.cn/wiki/wikcnqNsxlIkiKNoH1chS0K0HEc"
-          >Wiki</a
+  <body class={pageClass}>
+    <a class="skip-link" href="#main-content">跳至正文</a>
+    <div class="site-noise" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Scr1w Studio 首页">
+          <span class="brand-mark">
+            <img src="/favicon.png" alt="" width="42" height="42" />
+          </span>
+          <span class="brand-copy">
+            <strong>SCR1W</strong>
+            <small>CYBERSECURITY LAB</small>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="主导航">
+          {
+            navItems.map((item) => (
+              <a class:list={[{ active: item.match(pathname) }]} href={item.href}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+
+        <a
+          class="header-cta"
+          href="https://dlut-sss.feishu.cn/wiki/wikcnqNsxlIkiKNoH1chS0K0HEc"
+          target="_blank"
+          rel="noreferrer"
         >
-        <a href="/about">About</a>
+          <span>团队 Wiki</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <details class="mobile-menu">
+          <summary aria-label="打开导航菜单"><span></span><span></span></summary>
+          <nav aria-label="移动端导航">
+            {
+              navItems.map((item) => (
+                <a class:list={[{ active: item.match(pathname) }]} href={item.href}>
+                  {item.label}
+                </a>
+              ))
+            }
+            <a href="https://dlut-sss.feishu.cn/wiki/wikcnqNsxlIkiKNoH1chS0K0HEc">团队 Wiki ↗</a>
+          </nav>
+        </details>
       </div>
     </header>
-    <main class="max-w-screen-lg m-auto mt-4 p-4 prose prose-invert">
+
+    <main id="main-content">
       <slot />
     </main>
-    <footer
-      class="max-w-screen-lg m-auto p-4 prose prose-invert text-gray text-sm"
-    >
-      © {new Date().getFullYear()} Scr1w Studio. 本网站内容采用
-      <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>
-      进行许可.
+
+    <footer id="connect" class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="/favicon.png" alt="" width="56" height="56" />
+          <div>
+            <strong>Scr1w Studio</strong>
+            <p>大连理工大学学生网络安全团队</p>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div>
+            <span>EXPLORE</span>
+            <a href="/#research">研究方向</a>
+            <a href="/blog">技术文章</a>
+            <a href="/awards">荣誉记录</a>
+          </div>
+          <div>
+            <span>CONNECT</span>
+            <a href="/about">关于我们</a>
+            <a href="https://dlut-sss.feishu.cn/wiki/wikcnqNsxlIkiKNoH1chS0K0HEc">团队 Wiki ↗</a>
+            <button class="qq-contact" type="button" data-qq-group="636952425" aria-label="复制 QQ 群号 636952425">
+              QQ 群 · 636952425 <small>复制</small>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© {new Date().getFullYear()} SCR1W STUDIO / DLUT</span>
+        <span class="system-status"><i></i> SYSTEM ONLINE</span>
+        <span>CC BY-NC 4.0</span>
+      </div>
     </footer>
+
+    <script>
+      document.addEventListener("click", async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const button = target.closest<HTMLButtonElement>("[data-qq-group]");
+        if (!button) return;
+
+        const groupNumber = button.dataset.qqGroup;
+        if (!groupNumber) return;
+
+        await navigator.clipboard.writeText(groupNumber);
+        const status = button.querySelector("small");
+        if (!status) return;
+        status.textContent = "已复制";
+        window.setTimeout(() => { status.textContent = "复制"; }, 1600);
+      });
+    </script>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
 
 <style is:global>
   @font-face {
     font-family: "Knewave";
     src: url("/fonts/Knewave-Regular.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
     font-display: swap;
+  }
+
+  :root {
+    --bg: #05070c;
+    --bg-soft: #090d18;
+    --panel: rgba(11, 17, 30, 0.8);
+    --panel-solid: #0c1424;
+    --line: rgba(139, 188, 255, 0.15);
+    --line-strong: rgba(139, 188, 255, 0.34);
+    --text: #eff6ff;
+    --muted: #91a6c1;
+    --green: #8bbcff;
+    --green-strong: #5f81d8;
+    --cyan: #d6e9f8;
+    --orange: #ffb86b;
+    --danger: #ff6f7d;
+    --display: "Knewave", "Arial Black", sans-serif;
+    --mono: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --max: 1180px;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; background: var(--bg); }
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 82% 4%, rgba(63, 60, 146, 0.18), transparent 26rem),
+      radial-gradient(circle at 4% 36%, rgba(100, 138, 186, 0.08), transparent 28rem),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+  }
+
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, black, transparent 68%);
+    opacity: 0.19;
+    content: "";
+    pointer-events: none;
+  }
+
+  ::selection { background: var(--green); color: #050914; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; }
+  button, a, summary { -webkit-tap-highlight-color: transparent; }
+
+  .site-noise {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    opacity: 0.018;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 100;
+    padding: 10px 16px;
+    transform: translateY(-150%);
+    background: var(--green);
+    color: #050914;
+    font-weight: 800;
+  }
+  .skip-link:focus { transform: translateY(0); }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: rgba(5, 7, 12, 0.82);
+    backdrop-filter: blur(18px);
+  }
+
+  .header-inner {
+    width: min(calc(100% - 40px), var(--max));
+    height: 82px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .brand { display: inline-flex; align-items: center; gap: 12px; min-width: max-content; }
+  .brand-mark {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    background: rgba(139, 188, 255, 0.05);
+    clip-path: polygon(12% 0, 100% 0, 100% 72%, 72% 100%, 0 100%, 0 28%);
+  }
+  .brand-mark img { width: 37px; height: 37px; object-fit: contain; }
+  .brand-copy { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-copy strong { font-family: var(--mono); font-size: 1.05rem; letter-spacing: 0.16em; }
+  .brand-copy small { margin-top: 5px; color: var(--muted); font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; }
+
+  .desktop-nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .desktop-nav a {
+    position: relative;
+    padding: 10px 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    transition: color 160ms ease;
+  }
+  .desktop-nav a::after {
+    position: absolute;
+    right: 13px;
+    bottom: 5px;
+    left: 13px;
+    height: 1px;
+    transform: scaleX(0);
+    background: var(--green);
+    content: "";
+    transition: transform 160ms ease;
+  }
+  .desktop-nav a:hover, .desktop-nav a.active { color: var(--text); }
+  .desktop-nav a:hover::after, .desktop-nav a.active::after { transform: scaleX(1); }
+
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding: 10px 14px;
+    border: 1px solid var(--line-strong);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    transition: 160ms ease;
+  }
+  .header-cta:hover { border-color: var(--green); background: var(--green); color: #050914; }
+
+  .mobile-menu { display: none; margin-left: auto; }
+  .mobile-menu summary {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-content: center;
+    gap: 7px;
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    list-style: none;
+  }
+  .mobile-menu summary::-webkit-details-marker { display: none; }
+  .mobile-menu summary span { width: 20px; height: 1px; display: block; background: var(--green); }
+  .mobile-menu nav {
+    position: absolute;
+    top: 82px;
+    right: 0;
+    left: 0;
+    display: grid;
+    padding: 18px 20px 26px;
+    border-bottom: 1px solid var(--line-strong);
+    background: #080d18;
+  }
+  .mobile-menu nav a { padding: 13px 4px; border-bottom: 1px solid var(--line); color: var(--muted); font-family: var(--mono); }
+  .mobile-menu nav a.active { color: var(--green); }
+
+  main { min-height: calc(100vh - 340px); }
+  .shell { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--green); font-family: var(--mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .eyebrow::before { width: 28px; height: 1px; background: currentColor; content: ""; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 38px; }
+  .section-head h2, .page-hero h1 { margin: 12px 0 0; font-size: clamp(2.1rem, 5vw, 4.4rem); line-height: 1.02; letter-spacing: -0.045em; }
+  .section-head p { max-width: 560px; margin: 0; color: var(--muted); }
+  .page-hero { padding: 92px 0 64px; border-bottom: 1px solid var(--line); }
+  .page-hero p { max-width: 720px; margin: 24px 0 0; color: var(--muted); font-size: 1.05rem; }
+
+  .button-primary, .button-secondary {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 20px;
+    border: 1px solid var(--green);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: 180ms ease;
+  }
+  .button-primary { background: var(--green); color: #050914; }
+  .button-secondary { border-color: var(--line-strong); color: var(--text); }
+  .button-primary:hover, .button-secondary:hover { transform: translateY(-2px); box-shadow: 0 10px 34px rgba(95, 129, 216, 0.22); }
+  .button-secondary:hover { border-color: var(--green); color: var(--green); }
+
+  .site-footer { width: min(calc(100% - 40px), var(--max)); margin: 110px auto 0; padding: 50px 0 24px; border-top: 1px solid var(--line-strong); }
+  .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 80px; }
+  .footer-brand { display: flex; align-items: center; gap: 18px; }
+  .footer-brand img { width: 58px; height: 58px; object-fit: contain; filter: grayscale(0.2); }
+  .footer-brand strong { font-family: var(--mono); letter-spacing: 0.08em; }
+  .footer-brand p { margin: 4px 0 0; color: var(--muted); font-size: 0.85rem; }
+  .footer-links { display: flex; gap: 80px; }
+  .footer-links div { display: grid; gap: 8px; }
+  .footer-links span { margin-bottom: 6px; color: var(--green); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; }
+  .footer-links a { color: var(--muted); font-size: 0.84rem; }
+  .footer-links a:hover { color: var(--text); }
+  .qq-contact { padding: 0; display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 0.84rem; text-align: left; cursor: pointer; }
+  .qq-contact:hover { color: var(--text); }
+  .qq-contact small { padding: 1px 5px; border: 1px solid var(--line); color: var(--green); font-family: var(--mono); font-size: 0.5rem; }
+  .footer-bottom { margin-top: 48px; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); color: #677b96; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.08em; }
+  .system-status { display: inline-flex; align-items: center; gap: 8px; }
+  .system-status i { width: 7px; height: 7px; border-radius: 50%; background: var(--green-strong); box-shadow: 0 0 12px var(--green-strong); }
+
+  @media (max-width: 900px) {
+    .desktop-nav, .header-cta { display: none; }
+    .mobile-menu { display: block; }
+    .section-head { align-items: flex-start; flex-direction: column; }
+    .footer-grid { grid-template-columns: 1fr; gap: 42px; }
+  }
+
+  @media (max-width: 640px) {
+    .header-inner, .shell, .site-footer { width: min(calc(100% - 28px), var(--max)); }
+    .header-inner { height: 70px; }
+    .brand-copy small { display: none; }
+    .mobile-menu nav { top: 70px; }
+    .page-hero { padding: 68px 0 48px; }
+    .footer-links { gap: 44px; }
+    .footer-bottom { align-items: flex-start; flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
 </style>

@@ -1,19 +1,105 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
+
 const { post } = Astro.props;
 const { Content } = await render(post);
+const readingMinutes = Math.max(1, Math.ceil((post.body?.length ?? 0) / 900));
+const formatter = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 ---
 
-<Layout>
-  <h1>{post.data.title}</h1>
-  <p><i>{post.data.date.toDateString()}</i></p>
-  <Content />
+<Layout title={post.data.title} description={`${post.data.title} CTF 赛事技术复盘与 Writeup。`}>
+  <header class="article-hero">
+    <div class="shell">
+      <a class="back-link" href="/blog">← 返回技术文章</a>
+      <div class="article-label"><span>AFTER ACTION REPORT</span><i></i><span>PUBLIC INTELLIGENCE</span></div>
+      <h1>{post.data.title}</h1>
+      <div class="article-meta">
+        <div><span>PUBLISHED</span><time datetime={post.data.date.toISOString()}>{formatter.format(post.data.date)}</time></div>
+        <div><span>READ TIME</span><strong>{readingMinutes} MIN</strong></div>
+        <div><span>CLASSIFICATION</span><strong>CTF / WRITEUP</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="article-layout shell">
+    <aside class="article-rail">
+      <div class="rail-sticky">
+        <span>DOCUMENT</span>
+        <strong>{post.data.title}</strong>
+        <i></i>
+        <span>FORMAT</span>
+        <strong>MARKDOWN</strong>
+        <a href="/blog">ALL REPORTS ↗</a>
+      </div>
+    </aside>
+    <article class="article-body">
+      <Content />
+    </article>
+  </div>
+
+  <section class="article-end shell">
+    <div><span>EOF</span><strong>报告读取完毕</strong></div>
+    <a class="button-secondary" href="/blog">返回文章列表 <span>→</span></a>
+  </section>
 </Layout>
+
+<style>
+  .article-hero { position: relative; overflow: hidden; padding: 72px 0 58px; border-bottom: 1px solid var(--line-strong); background: linear-gradient(120deg, rgba(24,36,72,.8), rgba(5,7,12,.28)); }
+  .article-hero::after { position: absolute; top: 0; right: 8%; width: 280px; height: 100%; transform: skewX(-18deg); border-inline: 1px solid rgba(139,188,255,.11); background: rgba(139,188,255,.025); content: ""; }
+  .back-link { position: relative; z-index: 1; color: var(--muted); font-family: var(--mono); font-size: .7rem; }
+  .back-link:hover { color: var(--green); }
+  .article-label { position: relative; z-index: 1; margin-top: 64px; display: flex; align-items: center; gap: 12px; color: var(--green); font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; }
+  .article-label i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+  .article-hero h1 { position: relative; z-index: 1; margin: 16px 0 36px; font-family: var(--mono); font-size: clamp(3rem, 8vw, 7.4rem); line-height: .94; letter-spacing: -.075em; overflow-wrap: anywhere; }
+  .article-meta { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 56px; }
+  .article-meta div { display: grid; gap: 4px; }
+  .article-meta span { color: #687d99; font-family: var(--mono); font-size: .55rem; letter-spacing: .13em; }
+  .article-meta time, .article-meta strong { font-family: var(--mono); font-size: .7rem; font-weight: 500; }
+  .article-layout { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 72px; padding-top: 70px; }
+  .article-rail { border-right: 1px solid var(--line); }
+  .rail-sticky { position: sticky; top: 120px; padding-right: 24px; display: grid; gap: 4px; font-family: var(--mono); }
+  .rail-sticky span { color: #5b7190; font-size: .53rem; letter-spacing: .12em; }
+  .rail-sticky strong { margin-bottom: 16px; color: var(--muted); font-size: .68rem; overflow-wrap: anywhere; }
+  .rail-sticky i { height: 1px; margin: 4px 0 18px; background: var(--line); }
+  .rail-sticky a { margin-top: 22px; color: var(--green); font-size: .6rem; }
+  .article-body { min-width: 0; max-width: 900px; color: #cad8e7; font-size: .96rem; line-height: 1.82; }
+  .article-body :global(h1), .article-body :global(h2), .article-body :global(h3), .article-body :global(h4) { color: var(--text); font-family: var(--mono); line-height: 1.25; scroll-margin-top: 110px; }
+  .article-body :global(h1) { margin: 72px 0 28px; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); font-size: 2.15rem; letter-spacing: -.035em; }
+  .article-body :global(h1:first-child) { margin-top: 0; }
+  .article-body :global(h2) { margin: 58px 0 22px; font-size: 1.62rem; }
+  .article-body :global(h2::before) { margin-right: 10px; color: var(--green); content: "//"; }
+  .article-body :global(h3) { margin: 44px 0 16px; color: #dceaf8; font-size: 1.22rem; }
+  .article-body :global(h4) { margin-top: 34px; font-size: 1rem; }
+  .article-body :global(p) { margin: 0 0 20px; }
+  .article-body :global(a) { color: var(--green); text-decoration: underline; text-decoration-color: rgba(139,188,255,.4); text-underline-offset: 4px; }
+  .article-body :global(strong) { color: var(--text); }
+  .article-body :global(ul), .article-body :global(ol) { margin: 18px 0 24px; padding-left: 24px; }
+  .article-body :global(li) { margin: 7px 0; }
+  .article-body :global(li::marker) { color: var(--green); }
+  .article-body :global(blockquote) { margin: 30px 0; padding: 18px 22px; border-left: 2px solid var(--green); background: rgba(139,188,255,.055); color: #afc1d5; }
+  .article-body :global(blockquote p:last-child) { margin-bottom: 0; }
+  .article-body :global(code) { padding: 2px 5px; border: 1px solid var(--line); background: #080d18; color: var(--cyan); font-family: var(--mono); font-size: .86em; }
+  .article-body :global(pre) { max-width: 100%; margin: 26px 0 32px; padding: 20px; overflow-x: auto; border: 1px solid var(--line-strong); background: #03050a !important; box-shadow: inset 3px 0 0 var(--green); }
+  .article-body :global(pre code) { padding: 0; border: 0; background: none; color: inherit; font-size: .78rem; line-height: 1.65; }
+  .article-body :global(img) { height: auto; margin: 28px auto; display: block; border: 1px solid var(--line-strong); background: var(--panel-solid); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+  .article-body :global(table) { width: 100%; margin: 28px 0; border-collapse: collapse; font-size: .84rem; }
+  .article-body :global(th), .article-body :global(td) { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }
+  .article-body :global(th) { background: rgba(139,188,255,.07); color: var(--green); font-family: var(--mono); }
+  .article-body :global(hr) { margin: 54px 0; border: 0; border-top: 1px solid var(--line-strong); }
+  .article-end { margin-top: 84px; padding-block: 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-block: 1px solid var(--line); }
+  .article-end div { display: flex; align-items: center; gap: 14px; }
+  .article-end div span { color: var(--green); font-family: var(--mono); font-size: .68rem; }
+  .article-end div strong { font-size: .9rem; }
+  @media (max-width: 800px) { .article-layout { grid-template-columns: 1fr; gap: 0; } .article-rail { display: none; } }
+  @media (max-width: 600px) { .article-hero { padding-top: 48px; } .article-label { margin-top: 44px; flex-wrap: wrap; } .article-meta { gap: 24px; } .article-layout { padding-top: 44px; } .article-body { font-size: .9rem; } .article-body :global(pre) { margin-inline: -14px; border-inline: 0; } .article-end { align-items: flex-start; flex-direction: column; } }
+</style>

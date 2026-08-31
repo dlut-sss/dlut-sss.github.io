@@ -1,25 +1,82 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+
 const posts = await getCollection("blog");
 posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const formatter = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
 ---
 
-<Layout>
-  <h1>Blog</h1>
-  <p>
-    Welcome to the blog section of Scr1w Studio. Here you'll find the latest
-    updates, articles, and insights from our team.
-  </p>
-  <ul>
-    {
-      posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}`}>{post.data.title}</a>
-          <i>{post.data.date.toDateString()}</i>
-        </li>
-      ))
-    }
-  </ul>
-  <p>Stay tuned for more exciting content!</p>
+<Layout title="技术文章" description="Scr1w Studio CTF 赛事复盘、漏洞分析与安全研究文章。">
+  <section class="page-hero shell blog-hero">
+    <span class="eyebrow">Knowledge Base</span>
+    <div class="hero-row">
+      <div>
+        <h1>技术文章 / WRITEUPS</h1>
+        <p>记录攻击路径、解题过程与研究思考。公开复盘不是终点，而是下一次突破的起点。</p>
+      </div>
+      <div class="archive-status">
+        <span>ARCHIVE STATUS</span>
+        <strong>{String(posts.length).padStart(2, "0")} REPORTS</strong>
+        <i>LAST SYNC · {formatter.format(posts[0].data.date)}</i>
+      </div>
+    </div>
+  </section>
+
+  <section class="archive shell">
+    <div class="archive-toolbar">
+      <span>ALL INTELLIGENCE</span>
+      <span>SORTED / NEWEST_FIRST</span>
+    </div>
+    <div class="archive-grid">
+      {posts.map((post, index) => (
+        <a class="archive-card" href={`/blog/${post.id}`}>
+          <div class="archive-index">{String(index + 1).padStart(2, "0")}</div>
+          <div class="archive-content">
+            <div class="archive-meta">
+              <span>CTF WRITEUP</span>
+              <time datetime={post.data.date.toISOString()}>{formatter.format(post.data.date)}</time>
+            </div>
+            <h2>{post.data.title}</h2>
+            <p>赛题思路、漏洞链路、利用过程与关键技术细节的完整复盘。</p>
+            <div class="archive-tags"><span>OFFENSIVE</span><span>ANALYSIS</span></div>
+          </div>
+          <div class="archive-arrow">↗</div>
+        </a>
+      ))}
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .blog-hero { padding-bottom: 70px; }
+  .hero-row { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 60px; }
+  .hero-row > div:first-child { max-width: 780px; }
+  .archive-status { min-width: 220px; padding: 18px; display: grid; gap: 5px; border: 1px solid var(--line-strong); background: rgba(139,188,255,.035); font-family: var(--mono); }
+  .archive-status span, .archive-status i { color: #687d9a; font-size: .58rem; font-style: normal; letter-spacing: .11em; }
+  .archive-status strong { color: var(--green); font-size: 1.05rem; }
+  .archive { padding-top: 64px; }
+  .archive-toolbar { padding: 12px 0; display: flex; justify-content: space-between; border-bottom: 1px solid var(--line-strong); color: #687d9a; font-family: var(--mono); font-size: .62rem; letter-spacing: .12em; }
+  .archive-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-left: 1px solid var(--line); }
+  .archive-card { min-height: 280px; position: relative; padding: 24px; display: grid; grid-template-columns: 52px 1fr auto; gap: 20px; overflow: hidden; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(9,16,29,.48); transition: 200ms ease; }
+  .archive-card::before { position: absolute; inset: 0; transform: translateY(101%); background: linear-gradient(150deg, rgba(45,66,119,.48), rgba(9,16,29,.14)); content: ""; transition: transform 240ms ease; }
+  .archive-card:hover { z-index: 2; border-color: var(--line-strong); }
+  .archive-card:hover::before { transform: translateY(0); }
+  .archive-index, .archive-content, .archive-arrow { position: relative; z-index: 1; }
+  .archive-index { color: #5c7190; font-family: var(--mono); font-size: .7rem; }
+  .archive-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: #687e9c; font-family: var(--mono); font-size: .58rem; letter-spacing: .08em; }
+  .archive-meta span { color: var(--green); }
+  .archive-content h2 { margin: 48px 0 10px; font-family: var(--mono); font-size: clamp(1.5rem, 3vw, 2.2rem); letter-spacing: -.04em; }
+  .archive-content p { max-width: 420px; margin: 0; color: var(--muted); font-size: .82rem; }
+  .archive-tags { margin-top: 28px; display: flex; gap: 6px; }
+  .archive-tags span { padding: 3px 6px; border: 1px solid var(--line); color: #6a809d; font-family: var(--mono); font-size: .5rem; }
+  .archive-arrow { color: var(--green); font-size: 1.25rem; transition: transform 180ms ease; }
+  .archive-card:hover .archive-arrow { transform: translate(4px, -4px); }
+  @media (max-width: 820px) { .hero-row { grid-template-columns: 1fr; align-items: start; } .archive-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .archive-card { min-height: 250px; grid-template-columns: 36px 1fr auto; gap: 8px; padding: 18px 14px; } .archive-content h2 { margin-top: 36px; } .archive-toolbar span:last-child { display: none; } }
+</style>

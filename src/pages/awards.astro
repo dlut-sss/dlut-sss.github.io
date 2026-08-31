@@ -1,0 +1,151 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const awards = (await getCollection("awards")).sort((a, b) => {
+  const byDate = b.data.date.getTime() - a.data.date.getTime();
+  return byDate || b.data.priority - a.data.priority;
+});
+
+const dateFormatter = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric",
+  month: "2-digit",
+});
+const firstYear = Math.min(...awards.map((award) => award.data.date.getFullYear()));
+const featuredCount = awards.filter((award) => award.data.featured).length;
+---
+
+<Layout title="荣誉记录" description="Scr1w Studio 网络安全赛事成绩与团队荣誉记录。">
+  <section class="page-hero shell awards-hero">
+    <div class="hero-copy">
+      <span class="eyebrow">Hall of Recognition</span>
+      <h1>每一次上场<br />都值得被铭记</h1>
+      <p>记录团队在真实对抗中的协作、判断与突破。奖项是一个瞬间，而共同解决问题的能力会一直留下来。</p>
+    </div>
+    <div class="hero-seal" aria-hidden="true">
+      <span>SCR1W</span>
+      <strong>{String(awards.length).padStart(2, "0")}</strong>
+      <i>HONORS RECORDED</i>
+    </div>
+  </section>
+
+  <section class="award-stats shell" aria-label="荣誉数据概览">
+    <div><span>RECORDED</span><strong>{awards.length}</strong><small>项公开荣誉</small></div>
+    <div><span>SINCE</span><strong>{firstYear}</strong><small>成绩记录起点</small></div>
+    <div><span>SELECTED</span><strong>{String(featuredCount).padStart(2, "0")}</strong><small>项重点荣誉</small></div>
+  </section>
+
+  <section id="honors" class="honor-archive shell">
+    <div class="section-head">
+      <div><span class="eyebrow">Official Selection</span><h2>荣誉陈列</h2></div>
+      <p>每一枚橄榄叶徽章对应一次并肩作战。按时间倒序排列，持续更新。</p>
+    </div>
+
+    <div class="award-grid">
+      {awards.map((award, index) => (
+        <article class:list={["award-card", { featured: award.data.featured }]}>
+          <div class="card-top">
+            <span>{award.data.date.getFullYear()}</span>
+            <i>{String(index + 1).padStart(2, "0")} / {String(awards.length).padStart(2, "0")}</i>
+          </div>
+
+          <div class="laurel-mark" aria-label={`获奖结果：${award.data.result}`}>
+            <svg viewBox="0 0 260 154" aria-hidden="true">
+              <g class="laurel-branch">
+                <path d="M112 138C62 126 35 88 43 37" />
+                <ellipse cx="48" cy="42" rx="7" ry="17" transform="rotate(-18 48 42)" />
+                <ellipse cx="45" cy="65" rx="7" ry="17" transform="rotate(-35 45 65)" />
+                <ellipse cx="52" cy="88" rx="7" ry="17" transform="rotate(-52 52 88)" />
+                <ellipse cx="65" cy="108" rx="7" ry="17" transform="rotate(-64 65 108)" />
+                <ellipse cx="83" cy="124" rx="7" ry="17" transform="rotate(-75 83 124)" />
+                <ellipse cx="59" cy="48" rx="7" ry="17" transform="rotate(24 59 48)" />
+                <ellipse cx="62" cy="73" rx="7" ry="17" transform="rotate(38 62 73)" />
+                <ellipse cx="73" cy="95" rx="7" ry="17" transform="rotate(54 73 95)" />
+              </g>
+              <g class="laurel-branch">
+                <path d="M148 138C198 126 225 88 217 37" />
+                <ellipse cx="212" cy="42" rx="7" ry="17" transform="rotate(18 212 42)" />
+                <ellipse cx="215" cy="65" rx="7" ry="17" transform="rotate(35 215 65)" />
+                <ellipse cx="208" cy="88" rx="7" ry="17" transform="rotate(52 208 88)" />
+                <ellipse cx="195" cy="108" rx="7" ry="17" transform="rotate(64 195 108)" />
+                <ellipse cx="177" cy="124" rx="7" ry="17" transform="rotate(75 177 124)" />
+                <ellipse cx="201" cy="48" rx="7" ry="17" transform="rotate(-24 201 48)" />
+                <ellipse cx="198" cy="73" rx="7" ry="17" transform="rotate(-38 198 73)" />
+                <ellipse cx="187" cy="95" rx="7" ry="17" transform="rotate(-54 187 95)" />
+              </g>
+            </svg>
+            <div class="laurel-copy">
+              <small>AWARD</small>
+              <strong>{award.data.result}</strong>
+              <span>{award.data.code}</span>
+            </div>
+          </div>
+
+          <div class="award-copy">
+            <span>{award.data.category}</span>
+            <h2>{award.data.event}</h2>
+          </div>
+
+          <div class="card-foot">
+            <span>SCR1W STUDIO</span>
+            <time datetime={award.data.date.toISOString()}>{dateFormatter.format(award.data.date)}</time>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .awards-hero { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 64px; }
+  .hero-copy { max-width: 850px; }
+  .hero-seal { width: 184px; height: 184px; position: relative; display: grid; place-content: center; justify-items: center; border: 1px solid var(--line-strong); border-radius: 50%; background: radial-gradient(circle, rgba(63,60,146,.25), rgba(139,188,255,.035) 60%, transparent 61%); box-shadow: inset 0 0 0 10px var(--bg), inset 0 0 0 11px var(--line); font-family: var(--mono); }
+  .hero-seal::before, .hero-seal::after { position: absolute; top: 50%; width: 34px; height: 1px; background: var(--green); content: ""; }
+  .hero-seal::before { left: -17px; } .hero-seal::after { right: -17px; }
+  .hero-seal span, .hero-seal i { color: var(--muted); font-size: .5rem; font-style: normal; letter-spacing: .18em; }
+  .hero-seal strong { margin: 2px 0; color: var(--green); font-size: 3.1rem; line-height: 1; }
+
+  .award-stats { margin-top: 70px; display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line-strong); }
+  .award-stats div { padding: 32px; display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 20px; border-right: 1px solid var(--line); }
+  .award-stats div:last-child { border: 0; }
+  .award-stats span { grid-column: 1 / -1; color: #617794; font-family: var(--mono); font-size: .58rem; letter-spacing: .13em; }
+  .award-stats strong { margin-top: 10px; font-family: var(--mono); font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1; }
+  .award-stats small { color: var(--muted); }
+
+  .honor-archive { padding-top: 120px; }
+  .award-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .award-card { min-height: 470px; position: relative; padding: 22px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(155deg, rgba(13,21,38,.82), rgba(5,8,15,.68)); transition: 220ms ease; }
+  .award-card::before { position: absolute; inset: 8px; border: 1px solid rgba(139,188,255,.055); content: ""; pointer-events: none; }
+  .award-card::after { position: absolute; top: -80px; right: -80px; width: 180px; height: 180px; border: 1px solid rgba(139,188,255,.08); border-radius: 50%; content: ""; pointer-events: none; }
+  .award-card:hover { z-index: 2; transform: translateY(-6px); border-color: var(--line-strong); background: linear-gradient(155deg, rgba(25,37,71,.94), rgba(6,10,20,.82)); box-shadow: 0 28px 70px rgba(0,0,0,.32); }
+  .award-card.featured { border-color: rgba(139,188,255,.34); background: radial-gradient(circle at 50% 33%, rgba(63,60,146,.24), transparent 42%), linear-gradient(155deg, rgba(19,29,55,.94), rgba(6,10,20,.78)); }
+  .award-card.featured::before { border-color: rgba(139,188,255,.1); }
+
+  .card-top, .card-foot { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; color: #687e9c; font-family: var(--mono); font-size: .56rem; letter-spacing: .12em; }
+  .card-top i { color: #566b88; font-style: normal; }
+  .laurel-mark { height: 176px; position: relative; margin: 24px 0 6px; display: grid; place-items: center; color: #648aba; }
+  .laurel-mark svg { width: 250px; max-width: 88%; height: 154px; overflow: visible; }
+  .laurel-branch path { fill: none; stroke: currentColor; stroke-width: 1.4; opacity: .72; }
+  .laurel-branch ellipse { fill: currentColor; opacity: .76; }
+  .featured .laurel-mark { color: #8bbcff; filter: drop-shadow(0 0 18px rgba(95,129,216,.16)); }
+  .laurel-copy { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; font-family: var(--mono); text-align: center; }
+  .laurel-copy small { color: var(--muted); font-size: .46rem; letter-spacing: .2em; }
+  .laurel-copy strong { max-width: 108px; margin: 3px 0; color: var(--text); font-size: 1.28rem; line-height: 1.05; }
+  .laurel-copy span { min-width: 28px; padding: 2px 5px; border: 1px solid var(--line); color: var(--green); font-size: .52rem; letter-spacing: .1em; }
+
+  .award-copy { position: relative; z-index: 2; min-height: 128px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+  .award-copy > span { color: var(--green); font-family: var(--mono); font-size: .52rem; letter-spacing: .15em; }
+  .award-copy h2 { max-width: 300px; margin: 10px auto 0; font-size: .96rem; font-weight: 600; line-height: 1.55; }
+  .card-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
+  .card-foot time { color: var(--muted); }
+
+  @media (max-width: 980px) { .award-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .awards-hero { grid-template-columns: 1fr; } .hero-seal { display: none; } }
+  @media (max-width: 600px) {
+    .award-stats { grid-template-columns: 1fr; }
+    .award-stats div { border-right: 0; border-bottom: 1px solid var(--line); }
+    .honor-archive { padding-top: 88px; }
+    .award-grid { grid-template-columns: 1fr; }
+    .award-card { min-height: 440px; }
+  }
+</style>
