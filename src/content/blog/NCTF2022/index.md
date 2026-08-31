@@ -185,7 +185,7 @@ for i in range(height):
 img3.show()
 ```
 
-![img](./img01.png)
+![img](./img01.webp)
 
 ## MISC
 

@@ -746,7 +746,7 @@ export BASH_ENV='$(cat /root/flag >/tmp/a)'
 
 5:tt31309480，碰之道，搜索里面角色的 ID，找到第四话之类的相关网站，尝试找到 b 站的这个番，翻了一下第四话，验证成功
 
-![img](./img01.png)
+![img](./img01.webp)
 
 6:tt34382036，识图
 
@@ -768,7 +768,7 @@ hard：
 
 5:tt5004766，发现蜘蛛很有特点，于是问了 AI，得到被遗忘的孩子。
 
-![img](./img03.png)
+![img](./img03.webp)
 
 # pwn
 

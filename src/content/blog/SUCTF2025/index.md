@@ -668,13 +668,13 @@ https://github.com/testtttsu/homework/blob/main/homework.py
 
 这个打码能去么，password 那里
 
-![img](./img13.png)
+![img](./img13.webp)
 
 ![img](./img14.jpeg)
 
 苹果马赛克，2phxMo8iUE2bAVvdsBwZ
 
-![img](./img15.png)
+![img](./img15.webp)
 
 找到 commit id，https://api.github.com/repos/testtttsu/homework/activity
 
@@ -682,7 +682,7 @@ https://github.com/testtttsu/homework/commit/a4be9c81ae540340f3e208dc9b1ee109ea5
 
 解完是
 
-![img](./img16.png)
+![img](./img16.webp)
 
 python 拆一下,138\*108 大小。
 

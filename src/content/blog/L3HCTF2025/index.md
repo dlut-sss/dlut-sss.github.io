@@ -3,7 +3,7 @@ title: L3HCTF2025
 date: 2025-07-14
 ---
 
-![img](./img01.png)
+![img](./img01.webp)
 
 # 目录
 
@@ -13,7 +13,7 @@ date: 2025-07-14
 
 扫
 
-![img](./img02.png)
+![img](./img02.webp)
 
 ```plaintext
 flag is not here, but I can give you the key: "quantum"
@@ -29,7 +29,7 @@ flag is not here, but I can give you the key: "quantum"
 
 在 7z-gui 直接双击打开图片调出 Windows 自带的 图片浏览器，复制到本地，成功提取出文件
 
-![img](./img04.png)
+![img](./img04.webp)
 
 扫不出来，按颜色异或
 
@@ -282,9 +282,9 @@ https://github.com/AncientAbysswalker/RuinSeeker?tab=readme-ov-file
 
 通过标点符号对应到原始文本为：https://www.ign.com/articles/tunic-review-xbox-pc-steam，010里打开图片末尾有b64的提示：ign review
 
-![img](./img07.png)
+![img](./img07.webp)
 
-![img](./img08.jpeg)
+![img](./img08.webp)
 
 发现题目和现有工具对应不上，猜测是建立了新的规则，查看这种语言的原理，外层代表元音，内层代表辅音，由于已经找到题目对应的原文，单词一一对应后，可以打表获得所有音标对应的符号。
 
@@ -292,7 +292,7 @@ https://github.com/AncientAbysswalker/RuinSeeker?tab=readme-ov-file
 
 手搓大致内容如下：
 
-![img](./img09.jpeg)
+![img](./img09.webp)
 
 大致内容为
 
@@ -434,7 +434,7 @@ WGs84：114.16353904889526,30.621383055909554
 
 姓名：LELAND 大写
 
-![img](./img11.png)
+![img](./img11.webp)
 
 答题正确后目录穿越读 flag
 

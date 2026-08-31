@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "check:images": "node scripts/check-image-sizes.mjs",
+    "prebuild": "pnpm check:images",
     "build": "astro build",
     "preview": "astro preview",
     "preinstall": "npx only-allow pnpm",

@@ -3,7 +3,7 @@ title: N1CTF2024
 date: 2024-11-14
 ---
 
-![img](./img01.png)
+![img](./img01.webp)
 
 ## 目录
 
